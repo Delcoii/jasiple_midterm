@@ -1,0 +1,20 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/home/delcoii/jasiple_ws/devel/lib/python3/dist-packages",
+        "/home/delcoii/darknet_ros_ws/devel/lib/python3/dist-packages",
+        "/home/delcoii/carla-ros-bridge/catkin_ws/devel/lib/python3/dist-packages",
+        "/home/delcoii/catkin_ws/devel/lib/python3/dist-packages",
+        "/opt/ros/noetic/lib/python3/dist-packages",
+        "/opt/carla-simulator/PythonAPI/carla/dist/carla-0.9.12-py3.7-linux-x86_64.egg",
+        "/opt/carla-simulator/PythonAPI/carla"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/delcoii/jasiple_ws/devel/lib/python3/dist-packages",
+        "/home/delcoii/darknet_ros_ws/devel/lib/python3/dist-packages",
+        "/home/delcoii/carla-ros-bridge/catkin_ws/devel/lib/python3/dist-packages",
+        "/home/delcoii/catkin_ws/devel/lib/python3/dist-packages",
+        "/opt/ros/noetic/lib/python3/dist-packages",
+        "/opt/carla-simulator/PythonAPI/carla/dist/carla-0.9.12-py3.7-linux-x86_64.egg",
+        "/opt/carla-simulator/PythonAPI/carla"
+    ]
+}
