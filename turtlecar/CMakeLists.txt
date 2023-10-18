@@ -8,15 +8,20 @@ project(turtlecar)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  geometry_msgs
+  roscpp
+  
+  actionlib
+  actionlib_msgs  
+
   message_generation
   message_runtime
-  roscpp
+  
   std_msgs
+  geometry_msgs
 )
 
 ## System dependencies are found with CMake's conventions
-# find_package(Boost REQUIRED COMPONENTS system)
+find_package(Boost REQUIRED COMPONENTS system)
 
 
 ## Uncomment this if the package has a setup.py. This macro ensures
@@ -62,15 +67,15 @@ add_service_files(
 )
 
 ## Generate actions in the 'action' folder
-# add_action_files(
-#   FILES
-#   Action1.action
-#   Action2.action
-# )
+add_action_files(
+  FILES
+  WallDetect.action
+)
 
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
   DEPENDENCIES
+  actionlib_msgs
   geometry_msgs
   std_msgs
 )
@@ -107,7 +112,7 @@ generate_messages(
 catkin_package(
     INCLUDE_DIRS include
     LIBRARIES turtlecar
-    CATKIN_DEPENDS geometry_msgs message_generation message_runtime roscpp std_msgs
+    CATKIN_DEPENDS actionlib actionlib_msgs geometry_msgs message_generation message_runtime roscpp std_msgs
     DEPENDS system_lib
 )
 
@@ -119,7 +124,8 @@ catkin_package(
 ## Your package locations should be listed before other locations
 include_directories(
 	include
-  	${catkin_INCLUDE_DIRS}
+  ${catkin_INCLUDE_DIRS}
+  ${Boost_INCLUDE_DIRS}
 )
 
 
@@ -143,6 +149,17 @@ add_executable(transmission
 )
 add_dependencies(transmission ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(transmission
+  ${catkin_LIBRARIES}
+)
+############################################
+
+############################################
+# wall sensor node
+add_executable(safety_planner
+    src/safety_planner_node.cpp
+)
+add_dependencies(safety_planner ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(safety_planner
   ${catkin_LIBRARIES}
 )
 ############################################

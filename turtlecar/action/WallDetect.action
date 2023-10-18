@@ -1,0 +1,10 @@
+# goal
+float64 danger_distance
+---
+# result
+bool dangerous
+
+---
+# feedback
+float64 wall_distance
+

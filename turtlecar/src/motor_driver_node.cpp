@@ -17,6 +17,7 @@
 
 #include <std_msgs/Int32.h>
 #include <geometry_msgs/Twist.h>
+#include "turtlesim_msgs/Pose.h"
 
 #include "turtlecar/remote_sig_mapping.h"
 #include "turtlecar/SetGearShift.h"
@@ -35,6 +36,10 @@ int g_accel_us = (int)ACCEL_SIG_N;
 void SteeringCallback(const std_msgs::Int32::ConstPtr& msg);
 void AccelCallback(const std_msgs::Int32::ConstPtr& msg);
 
+int g_turtle_pose_x = 5.544445;
+int g_turtle_pose_y = 5.544445;
+void TurtlePoseCallback(const turtlesim_msgs::Pose::ConstPtr& msg);
+
 int g_gear = 2;
 bool GearShiftCallback(turtlecar::SetGearShift::Request &req, turtlecar::SetGearShift::Response &res);
 
@@ -51,6 +56,7 @@ int main(int argc, char** argv) {
 
     ros::Subscriber steer_signal = nh.subscribe("/remocon_steer_us", 100, SteeringCallback);
     ros::Subscriber accel_signal = nh.subscribe("/remocon_accel_us", 100, AccelCallback);
+    ros::Subscriber turtle_pose = nh.subscribe("/turtle1/pose", 100, TurtlePoseCallback);
 
     ros::Publisher turtle_cmd_pub = nh.advertise<geometry_msgs::Twist>("/turtle1/cmd_vel", 100);
     geometry_msgs::Twist turtle_cmd;
@@ -62,12 +68,17 @@ int main(int argc, char** argv) {
     double d_steer_sig_us = -1.;
     double d_accel_sig_us = -1.;
     int turtlecar_gear = -1.;
+    double d_turtle_pose_x = -1.;
+    double d_turtle_pose_y = -1.;
 
     while (ros::ok()) {
         // initialize global var to local
         d_steer_sig_us = (double)g_steer_us;
         d_accel_sig_us = (double)g_accel_us;
         turtlecar_gear = g_gear;
+        d_turtle_pose_x = g_turtle_pose_x;
+        d_turtle_pose_y = g_turtle_pose_y;
+
 
         RemoteSigMapping(d_steer_sig_us, d_accel_sig_us);
         
@@ -118,6 +129,10 @@ void SteeringCallback(const std_msgs::Int32::ConstPtr& msg) {
 }
 void AccelCallback(const std_msgs::Int32::ConstPtr& msg) {
     g_accel_us = msg->data;
+}
+void TurtlePoseCallback(const turtlesim_msgs::Pose::ConstPtr& msg) {
+    g_turtle_pose_x = msg->x;
+    g_turtle_pose_y = msg->y;
 }
 
 bool GearShiftCallback(turtlecar::SetGearShift::Request &req, turtlecar::SetGearShift::Response &res) {
