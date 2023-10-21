@@ -17,18 +17,23 @@
 
 #include <std_msgs/Int32.h>
 #include <geometry_msgs/Twist.h>
-#include "turtlesim_msgs/Pose.h"
+#include "turtlesim_msgs/Pose.h"                    // topics
+
+#include "turtlecar/SetGearShift.h"                 // service 
+
+#include "turtlecar/SafetyPlanner/SafetyPlan.h"     // action server class
 
 #include "turtlecar/remote_sig_mapping.h"
-#include "turtlecar/SetGearShift.h"
+#include "turtlecar/turtle_wall_detection.h"        // calculating wall distance
+
 
 #define LOOP_HZ             60.
 
 
 // max velocity for turtle
 #define GEAR1_MAX_VEL       1.0
-#define GEAR2_MAX_VEL       3.0
-#define GEAR3_MAX_VEL       5.0
+#define GEAR2_MAX_VEL       4.0
+#define GEAR3_MAX_VEL       7.0
 
 
 int g_steer_us = (int)STEER_SIG_N;
@@ -36,8 +41,8 @@ int g_accel_us = (int)ACCEL_SIG_N;
 void SteeringCallback(const std_msgs::Int32::ConstPtr& msg);
 void AccelCallback(const std_msgs::Int32::ConstPtr& msg);
 
-int g_turtle_pose_x = 5.544445;
-int g_turtle_pose_y = 5.544445;
+double g_turtle_pose_x = 5.544445;
+double g_turtle_pose_y = 5.544445;
 void TurtlePoseCallback(const turtlesim_msgs::Pose::ConstPtr& msg);
 
 int g_gear = 2;
@@ -45,6 +50,8 @@ bool GearShiftCallback(turtlecar::SetGearShift::Request &req, turtlecar::SetGear
 
 double map(double x, double in_min, double in_max, double out_min, double out_max);
 double constrain(double x, double out_min, double out_max);
+
+
 
 int main(int argc, char** argv) {
 
@@ -67,15 +74,16 @@ int main(int argc, char** argv) {
     double d_linear_speed = -1.;
     double d_steer_sig_us = -1.;
     double d_accel_sig_us = -1.;
-    int turtlecar_gear = -1.;
+    int i_turtlecar_gear = -1.;
     double d_turtle_pose_x = -1.;
     double d_turtle_pose_y = -1.;
+    double d_wall_dist = -1.;
 
     while (ros::ok()) {
         // initialize global var to local
         d_steer_sig_us = (double)g_steer_us;
         d_accel_sig_us = (double)g_accel_us;
-        turtlecar_gear = g_gear;
+        i_turtlecar_gear = g_gear;
         d_turtle_pose_x = g_turtle_pose_x;
         d_turtle_pose_y = g_turtle_pose_y;
 
@@ -83,17 +91,17 @@ int main(int argc, char** argv) {
         RemoteSigMapping(d_steer_sig_us, d_accel_sig_us);
         
 
-        if (turtlecar_gear == 1) {
+        if (i_turtlecar_gear == 1) {
             d_angular_speed = map(d_steer_sig_us, STEER_SIG_MIN, STEER_SIG_MAX, GEAR1_MAX_VEL, (-1.)*GEAR1_MAX_VEL);
 
             d_linear_speed = map(d_accel_sig_us, ACCEL_SIG_MIN, ACCEL_SIG_MAX, (-1.)*GEAR1_MAX_VEL, GEAR1_MAX_VEL);
         }
-        else if (turtlecar_gear == 2) {
+        else if (i_turtlecar_gear == 2) {
             d_angular_speed = map(d_steer_sig_us, STEER_SIG_MIN, STEER_SIG_MAX, GEAR2_MAX_VEL, (-1.)*GEAR2_MAX_VEL);
 
             d_linear_speed = map(d_accel_sig_us, ACCEL_SIG_MIN, ACCEL_SIG_MAX, (-1.)*GEAR2_MAX_VEL, GEAR2_MAX_VEL);
         }
-        else if (turtlecar_gear == 3) {
+        else if (i_turtlecar_gear == 3) {
             d_angular_speed = map(d_steer_sig_us, STEER_SIG_MIN, STEER_SIG_MAX, GEAR3_MAX_VEL, (-1.)*GEAR3_MAX_VEL);
 
             d_linear_speed = map(d_accel_sig_us, ACCEL_SIG_MIN, ACCEL_SIG_MAX, (-1.)*GEAR3_MAX_VEL, GEAR3_MAX_VEL);
@@ -106,17 +114,21 @@ int main(int argc, char** argv) {
         turtle_cmd.angular.x = 0.;
         turtle_cmd.angular.y = 0.;
         turtle_cmd.angular.z = d_angular_speed;
+
+        d_wall_dist = WallDist(d_turtle_pose_x, d_turtle_pose_y);
         
         turtle_cmd_pub.publish(turtle_cmd);
         // for debugging
-        // std::cout <<
-        //     "================================" << "\n" <<
+        std::cout <<
+            "================================" << "\n" <<
         //     "motor driver output" << "\n\n" << 
         //     "    steer sig : " << d_steer_sig_us << "\n" <<
         //     "    accel sig : " << d_accel_sig_us << "\n" << 
         //     "    linear x   : " << d_linear_speed << "\n" <<
         //     "    angular z  : " << d_angular_speed << "\n" <<
-        // std::endl;
+        "    gear       : " << i_turtlecar_gear << "\n" <<
+        "    wall dist  : " << d_wall_dist << "\n" <<
+        std::endl;
 
         loop_rate_hz.sleep();
         ros::spinOnce();

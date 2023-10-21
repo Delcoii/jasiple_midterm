@@ -31,6 +31,7 @@ int main(int argc, char** argv) {
 
     ROS_INFO("Sending danger reference distance to motor driver");
     
+    // read by parameter
     double danger_dist;
     nh.param("/danger_zone_dist", danger_dist, DANGER_DEFAULT);
 

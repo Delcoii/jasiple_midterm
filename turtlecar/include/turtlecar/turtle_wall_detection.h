@@ -3,7 +3,7 @@
 
 #define TURTLESIM_MAX_COORD     11.08888
 
-double d_check_wall_dist (double x, double y) {
+double WallDist (double x, double y) {
 
     double d_top_dist = TURTLESIM_MAX_COORD - y;
     double d_bottom_dist = y;
@@ -12,8 +12,8 @@ double d_check_wall_dist (double x, double y) {
 
     double min_dist = d_top_dist;
     if (min_dist > d_bottom_dist)   min_dist = d_bottom_dist;
-    if (min_dist > d_left)          min_dist = d_left_dist;
-    if (min_dist > d_right)         min_dist = d_right_dist;
+    if (min_dist > d_left_dist)     min_dist = d_left_dist;
+    if (min_dist > d_right_dist)    min_dist = d_right_dist;
 
     return min_dist;
 }
