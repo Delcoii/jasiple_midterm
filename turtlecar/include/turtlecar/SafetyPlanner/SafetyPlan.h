@@ -22,14 +22,17 @@ public:
         :
         as_(nh_, name, boost::bind(&SafetyPlanAction::executeCB, this, _1), false),
         action_name_(name),
+        
         wall_dist_(999.)
     {
+        result_.dangerous = false;
         as_.start();
     }
 
     ~SafetyPlanAction(void) {}
 
     void SetWallDist(double dist);
+    bool Danger();
     void executeCB(const turtlecar::WallDetectGoalConstPtr& goal);
 };
 
@@ -37,6 +40,9 @@ void SafetyPlanAction::SetWallDist(double dist) {
     wall_dist_ = dist;
 }
 
+bool SafetyPlanAction::Danger() {
+    return result_.dangerous;
+}
 
 void SafetyPlanAction::executeCB(const turtlecar::WallDetectGoalConstPtr& goal) {
     ros::Rate action_loop(60.);

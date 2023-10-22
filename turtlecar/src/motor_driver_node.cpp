@@ -31,6 +31,7 @@
 
 
 // max velocity for turtle
+#define DANGER_MAX_VEL      0.5
 #define GEAR1_MAX_VEL       1.0
 #define GEAR2_MAX_VEL       4.0
 #define GEAR3_MAX_VEL       7.0
@@ -92,8 +93,12 @@ int main(int argc, char** argv) {
 
         RemoteSigMapping(d_steer_sig_us, d_accel_sig_us);
         
+        if (safety_plan.Danger() == true) {
+            d_angular_speed = map(d_steer_sig_us, STEER_SIG_MIN, STEER_SIG_MAX, DANGER_MAX_VEL, (-1.)*DANGER_MAX_VEL);
 
-        if (i_turtlecar_gear == 1) {
+            d_linear_speed = map(d_accel_sig_us, ACCEL_SIG_MIN, ACCEL_SIG_MAX, (-1.)*DANGER_MAX_VEL, DANGER_MAX_VEL);
+        }
+        else if (i_turtlecar_gear == 1) {
             d_angular_speed = map(d_steer_sig_us, STEER_SIG_MIN, STEER_SIG_MAX, GEAR1_MAX_VEL, (-1.)*GEAR1_MAX_VEL);
 
             d_linear_speed = map(d_accel_sig_us, ACCEL_SIG_MIN, ACCEL_SIG_MAX, (-1.)*GEAR1_MAX_VEL, GEAR1_MAX_VEL);
