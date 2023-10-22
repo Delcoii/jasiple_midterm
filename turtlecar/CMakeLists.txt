@@ -18,6 +18,9 @@ find_package(catkin REQUIRED COMPONENTS
   
   std_msgs
   geometry_msgs
+
+  rospy
+  visualization_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -164,5 +167,12 @@ add_executable(safety_planner
 add_dependencies(safety_planner ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(safety_planner
   ${catkin_LIBRARIES}
+)
+############################################
+
+############################################
+# camera node (python)
+catkin_install_python(PROGRAMS scripts/turtle_cam.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 ############################################

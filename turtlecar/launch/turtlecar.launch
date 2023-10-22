@@ -1,0 +1,37 @@
+<launch>
+    <!-- for rosserial package -->
+    <arg name="_port" default="/dev/ttyUSB0"/>
+    <arg name="_baud" default="57600"/>
+
+    <!-- for turtlesim -->
+    <arg name="_r" default="47"/>
+    <arg name="_g" default="157"/>
+    <arg name="_b" default="39"/>
+
+    <!-- for safety planner node -->
+    <arg name="/danger_zond_dist" default="0.6"/>
+    
+    <!-- for rosserial package -->
+    <param name="port" type="string" value="$(arg _port)"/>
+    <param name="baud" type="int" value="$(arg _baud)"/>
+    <node pkg="rosserial_python" type="serial_node.py" name="rc_car_sig"/>
+    
+
+
+    <!-- for turtlesim -->
+    <param name="/turtlesim/background_r" value="$(arg _r)"/>
+    <param name="/turtlesim/background_g" value="$(arg _g)"/>
+    <param name="/turtlesim/background_b" value="$(arg _b)"/>
+    <!-- <node pkg="turtlesim" type="turtlesim_node" name="turtle1"/> -->
+    <!-- background color not enabled when it's in same .launch -->
+    
+
+    <!-- for safety planner node -->
+    <param name ="/danger_zone_dist" type ="double" value="$(arg /danger_zond_dist)" />
+
+    <node pkg="turtlecar" type="turtlecar" name="turtlecar" output="screen"/>
+
+    <node pkg="turtlecar" type="turtle_cam.py" name="turtle_camera" />
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find turtlecar)/rviz/turtle_floor.rviz"/>
+
+</launch>

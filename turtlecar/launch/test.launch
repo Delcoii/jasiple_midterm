@@ -1,0 +1,14 @@
+<launch>
+
+    <arg name="_r" default="0.73"/>
+    <arg name="_g" default="0.89"/>
+    <arg name="_b" default="0.36"/>
+
+
+    <!-- for turtlesim -->
+    <param name="/turtlesim/background_r" value="$(arg _r)"/>
+    <param name="/turtlesim/background_g" value="$(arg _g)"/>
+    <param name="/turtlesim/background_b" value="$(arg _b)"/>
+    <node pkg="turtlesim" type="turtlesim_node" name="turtle1"/>
+
+</launch>
