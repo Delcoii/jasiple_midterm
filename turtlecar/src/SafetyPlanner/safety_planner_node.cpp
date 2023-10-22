@@ -45,7 +45,7 @@ int main(int argc, char** argv) {
 
     if (finished == true) {
         actionlib::SimpleClientGoalState state = ac.getState();
-        ROS_INFO("Action %s", state.toString().c_str());
+        ROS_INFO("Turtlecar is now slow!!(%s)", state.toString().c_str());
     }
     else {
         ROS_INFO("Action did not finish before the timeout");
