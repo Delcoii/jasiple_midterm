@@ -132,11 +132,14 @@ include_directories(
 
 ############################################
 # motor driver node
-add_executable(motor_driver
-    src/motor_driver_node.cpp
+add_executable(turtlecar
+    src/TurtleCar/main.cpp
+    src/TurtleCar/TurtleCar.cpp
+    src/TurtleCar/RemoteSigMapping.cpp
+    src/TurtleCar/TurtleWallDetection.cpp
 )
-add_dependencies(motor_driver ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(motor_driver
+add_dependencies(turtlecar ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(turtlecar
   ${catkin_LIBRARIES}
 )
 ############################################
@@ -145,7 +148,7 @@ target_link_libraries(motor_driver
 ############################################
 # transmission node
 add_executable(transmission
-    src/transmission_node.cpp
+    src/SpeedControl/transmission_node.cpp
 )
 add_dependencies(transmission ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(transmission
