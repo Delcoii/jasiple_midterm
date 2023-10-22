@@ -156,7 +156,7 @@ target_link_libraries(transmission
 ############################################
 # wall sensor node
 add_executable(safety_planner
-    src/safety_planner_node.cpp
+    src/SafetyPlanner/safety_planner_node.cpp
 )
 add_dependencies(safety_planner ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(safety_planner

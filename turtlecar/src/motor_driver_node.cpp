@@ -70,6 +70,8 @@ int main(int argc, char** argv) {
 
     ros::ServiceServer service = nh.advertiseService("/gear_shift", GearShiftCallback);
 
+    SafetyPlanAction safety_plan("/wall_detect");
+
     double d_angular_speed = -1.;
     double d_linear_speed = -1.;
     double d_steer_sig_us = -1.;
@@ -116,19 +118,20 @@ int main(int argc, char** argv) {
         turtle_cmd.angular.z = d_angular_speed;
 
         d_wall_dist = WallDist(d_turtle_pose_x, d_turtle_pose_y);
+        safety_plan.SetWallDist(d_wall_dist);
         
         turtle_cmd_pub.publish(turtle_cmd);
         // for debugging
-        std::cout <<
-            "================================" << "\n" <<
+        // std::cout <<
+        // "================================" << "\n" <<
         //     "motor driver output" << "\n\n" << 
         //     "    steer sig : " << d_steer_sig_us << "\n" <<
         //     "    accel sig : " << d_accel_sig_us << "\n" << 
         //     "    linear x   : " << d_linear_speed << "\n" <<
         //     "    angular z  : " << d_angular_speed << "\n" <<
-        "    gear       : " << i_turtlecar_gear << "\n" <<
-        "    wall dist  : " << d_wall_dist << "\n" <<
-        std::endl;
+        // "    gear       : " << i_turtlecar_gear << "\n" <<
+        // "    wall dist  : " << d_wall_dist << "\n" <<
+        // std::endl;
 
         loop_rate_hz.sleep();
         ros::spinOnce();
