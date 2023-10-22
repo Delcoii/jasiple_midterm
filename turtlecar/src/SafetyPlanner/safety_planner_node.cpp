@@ -39,7 +39,11 @@ int main(int argc, char** argv) {
     goal.danger_distance = danger_dist;
 
     ac.sendGoal(goal);
-    std::cout << "timeout(s) : " << TIMEOUT_SEC << std::endl;
+    std::cout << 
+        "timeout(s) : " << TIMEOUT_SEC << "\n" <<
+        "danger dist : " << danger_dist <<
+    std::endl;
+
 
     bool finished = ac.waitForResult(ros::Duration(TIMEOUT_SEC));
 
