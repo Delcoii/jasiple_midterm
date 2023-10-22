@@ -21,7 +21,6 @@
 #define LOOP_HZ             60.
 
 
-
 int main(int argc, char** argv) {
 
     ros::init(argc, argv, "turtlecar");
@@ -39,7 +38,6 @@ int main(int argc, char** argv) {
 
     while (ros::ok()) {
         
-        
         if (safety_plan.Danger() == true) {
             turtlecar.Run(true);    // slow mode enable
         }
@@ -48,7 +46,6 @@ int main(int argc, char** argv) {
         }
         
         safety_plan.SetWallDist(turtlecar.WallDist()); 
-
 
         loop_rate_hz.sleep();
         ros::spinOnce();
