@@ -11,4 +11,7 @@ RC car remote controller + Arduino Mega + ROSSerial package
 
 https://github.com/Delcoii/jasiple_midterm/assets/98382592/4e80409a-fb54-442d-bcab-a62362c69a3e
 
+full video
+https://youtu.be/0Pe5cZcMYnE
+
 
